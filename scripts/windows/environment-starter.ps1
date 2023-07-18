@@ -23,8 +23,14 @@ $rootDirectory = Join-Path -Path $scriptDirectory -ChildPath "..\..\"
 
 $ccBackendDirectory = $rootDirectory + "\cc-backend"
 
+$ccRootConsoleDirectory = $rootDirectory + "\cc-root-console"
+
 $ccBackedGoConfigurationFile = $ccBackendDirectory + "\docker\.go_configuration.env"
 
+$ccRootConsoleNodeConfigurationFile = $ccRootConsoleDirectory + "\docker\.node_configuration.env"
+
 createEnvironmentVariables -envFilePath $ccBackedGoConfigurationFile
+
+createEnvironmentVariables -envFilePath $ccRootConsoleNodeConfigurationFile
 
 startEnvironment -SubmodulePath $rootDirectory -EnvironmentRelativePath $Environment -Action $Action -Option $Option

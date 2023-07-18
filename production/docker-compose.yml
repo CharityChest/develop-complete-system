@@ -29,3 +29,16 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       DB_NAME: ${MYSQL_DATABASE}
+  cc-root-console:
+    image: charity-chest/cc-root-console-production
+    build:
+      context: ../cc-root-console/cc-root-console
+      dockerfile: ../docker/production/Dockerfile
+      args:
+        - NODE_VERSION=${CC_ROOT_CONSOLE_NODE_VERSION}
+        - ALPINE_VERSION=${CC_ROOT_CONSOLE_ALPINE_VERSION}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - cc-backend-production
+
