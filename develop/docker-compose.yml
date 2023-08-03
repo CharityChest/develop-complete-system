@@ -45,3 +45,8 @@ services:
       - cc-backend-develop
     volumes:
       - ../cc-root-console/cc-root-console:/code
+    environment:
+        NEXT_PUBLIC_BACKEND_HOST: "cc-backend-develop"
+        NEXT_PUBLIC_BACKEND_PORT: "8080"
+        NEXT_PUBLIC_BACKEND_PROTOCOL: "http"
+        NEXT_PUBLIC_BACKEND_BASE_URI: "api/v1"
