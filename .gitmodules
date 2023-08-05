@@ -4,3 +4,6 @@
 [submodule "cc-root-console"]
 	path = cc-root-console
 	url = git@github.com:CharityChest/cc-root-console.git
+[submodule "cc-backend-root-console"]
+	path = cc-backend-root-console
+	url = git@github.com:CharityChest/cc-backend-root-console.git
