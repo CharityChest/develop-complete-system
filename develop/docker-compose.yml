@@ -10,6 +10,14 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  mailhog-develop:
+    container_name: mailhog-develop
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - "1026:1025" # smtp server
+      - "8026:8025" # web ui
   cc-backend-develop:
     image: charity-chest/cc-backend-develop
     build:
@@ -39,9 +47,9 @@ services:
         - GOLANG_VERSION=${CC_BACKEND_ROOT_CONSOLE_GOLANG_VERSION}
         - ALPINE_VERSION=${CC_BACKEND_ROOT_CONSOLE_ALPINE_VERSION}
     ports:
-      - "8080:8080"
-      - "8000:8000"
-      - "40000:40000"
+      - "8081:8080"
+      - "8001:8000"
+      - "40001:40000"
     depends_on:
       - cc-db-developing
     environment:
@@ -69,9 +77,9 @@ services:
         BACKEND_PORT: "8080"
         BACKEND_PROTOCOL: "http"
         BACKEND_BASE_URI: "api/v1"
-        EMAIL_SERVER_HOST: ${EMAIL_SERVER_HOST}
-        EMAIL_SERVER_PORT: ${EMAIL_SERVER_PORT}
-        EMAIL_SERVER_USER: ${EMAIL_SERVER_USER}
-        EMAIL_SERVER_PASSWORD: ${EMAIL_SERVER_PASSWORD}
-        EMAIL_SERVER_FROM: ${EMAIL_SERVER_FROM}
+        EMAIL_SERVER_HOST: "mailhog-develop"
+        EMAIL_SERVER_PORT: 1026
+        EMAIL_SERVER_USER: ""
+        EMAIL_SERVER_PASSWORD: ""
+        EMAIL_SERVER_FROM: "Charity Chest <develop>"
 

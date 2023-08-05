@@ -10,7 +10,14 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-
+  mailhog-production:
+    container_name: mailhog-production
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - "1025:1025" # smtp server
+      - "8025:8025" # web ui
   cc-backend-production:
     image: charity-chest/cc-backend-production
     build:
@@ -28,7 +35,25 @@ services:
       DB_PORT: "3306"
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
-      DB_NAME: ${MYSQL_DATABASE}
+      DB_NAME: "cc_backend_production"
+  cc-backend-root-console-production:
+    image: charity-chest/cc-backend-root-console-production
+    build:
+      context: ../cc-backend-root-console
+      dockerfile: ./docker/production/Dockerfile
+      args:
+        - GOLANG_VERSION=${CC_BACKEND_GOLANG_VERSION}
+        - ALPINE_VERSION=${CC_BACKEND_ALPINE_VERSION}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - cc-db-production
+    environment:
+      DB_HOST: "cc-db-production"
+      DB_PORT: "3306"
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: "cc_backend_root_console_production"
   cc-root-console:
     image: charity-chest/cc-root-console-production
     build:
@@ -40,5 +65,15 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - cc-backend-production
+      - cc-backend-root-console-production
+    environment:
+      BACKEND_HOST: "cc-backend-root-console-production"
+      BACKEND_PORT: "8080"
+      BACKEND_PROTOCOL: "http"
+      BACKEND_BASE_URI: "api/v1"
+      EMAIL_SERVER_HOST: "mailhog-production"
+      EMAIL_SERVER_PORT: 1025
+      EMAIL_SERVER_USER: ""
+      EMAIL_SERVER_PASSWORD: ""
+      EMAIL_SERVER_FROM: "Charity Chest"
 
