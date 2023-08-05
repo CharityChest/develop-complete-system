@@ -10,7 +10,6 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-
   cc-backend-develop:
     image: charity-chest/cc-backend-develop
     build:
@@ -30,7 +29,27 @@ services:
       DB_PORT: "3306"
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
-      DB_NAME: ${MYSQL_DATABASE}
+      DB_NAME: "cc_backend_develop"
+  cc-backend-root-console-develop:
+    image: charity-chest/cc-backend-root-console-develop
+    build:
+      context: ../cc-backend-root-console
+      dockerfile: ./docker/develop/Dockerfile
+      args:
+        - GOLANG_VERSION=${CC_BACKEND_ROOT_CONSOLE_GOLANG_VERSION}
+        - ALPINE_VERSION=${CC_BACKEND_ROOT_CONSOLE_ALPINE_VERSION}
+    ports:
+      - "8080:8080"
+      - "8000:8000"
+      - "40000:40000"
+    depends_on:
+      - cc-db-developing
+    environment:
+      DB_HOST: "cc-db-developing"
+      DB_PORT: "3306"
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: "cc_backend_root_console_develop"
   cc-root-console:
     image: charity-chest/cc-root-console-develop
     build:
@@ -42,11 +61,11 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - cc-backend-develop
+      - cc-backend-root-console-develop
     volumes:
       - ../cc-root-console/cc-root-console:/code
     environment:
-        BACKEND_HOST: "cc-backend-develop"
+        BACKEND_HOST: "cc-backend-root-console-develop"
         BACKEND_PORT: "8080"
         BACKEND_PROTOCOL: "http"
         BACKEND_BASE_URI: "api/v1"

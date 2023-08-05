@@ -12,18 +12,22 @@ START_ENVIRONMENT_MODULE_FILE="$MODULES_PATH/start-environment.sh"
 CC_BACKEND_PATH="$ROOT_PATH/cc-backend"
 
 CC_ROOT_CONSOLE_PATH="$ROOT_PATH/cc-root-console"
+CC_BACKEND_ROOT_CONSOLE_PATH="$ROOT_PATH/cc-backend-root-console"
 
-CC_BACKENG_GO_VARIABLES_FILE="$CC_BACKEND_PATH/docker/.go_configuration.env"
+CC_BACKEND_GO_VARIABLES_FILE="$CC_BACKEND_PATH/docker/.go_configuration.env"
 CC_ROOT_CONSOLE_NODE_VARIABLES_FILE="$CC_ROOT_CONSOLE_PATH/docker/.node_configuration.env"
+CC_BACKEND_ROOT_CONSOLE_GO_VARIABLES_FILE="$CC_BACKEND_ROOT_CONSOLE_PATH/docker/.go_configuration.env"
 
 # shellcheck disable=SC1090
 source "$READ_ENV_MODULE_FILE"
 # shellcheck disable=SC1090
 source "$START_ENVIRONMENT_MODULE_FILE"
 
-readEnv "$CC_BACKENG_GO_VARIABLES_FILE"
+readEnv "$CC_BACKEND_GO_VARIABLES_FILE"
 
 readEnv "$CC_ROOT_CONSOLE_NODE_VARIABLES_FILE"
+
+readEnv "$CC_BACKEND_ROOT_CONSOLE_GO_VARIABLES_FILE"
 
 # Check if a parameter was provided
 if [ -z "$1" ]; then
