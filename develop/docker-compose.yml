@@ -10,6 +10,11 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  cc-redis-develop:
+    image: redis:7.0.12-alpine3.18
+    command: redis-server --user ${REDIS_USERNAME} on +@all ~* \>${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
   mailhog-develop:
     container_name: mailhog-develop
     image: mailhog/mailhog
@@ -82,4 +87,10 @@ services:
         EMAIL_SERVER_USER: ""
         EMAIL_SERVER_PASSWORD: ""
         EMAIL_SERVER_FROM: "Charity Chest <develop>"
-
+        REDIS_HOST: "cc-redis-develop"
+        REDIS_PORT: 6379
+        REDIS_USER: ${REDIS_USERNAME}
+        REDIS_PASSWORD: ${REDIS_PASSWORD}
+        REDIS_DB: 0
+        AUTH_ENTRIES: ${AUTH_ENTRIES}
+        SECRET: ${SECRET}
