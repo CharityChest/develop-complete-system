@@ -94,4 +94,4 @@ services:
         REDIS_DB: 0
         AUTH_ENTRIES: ${AUTH_ENTRIES}
         SECRET: ${SECRET}
-        ENVIRONMENT: "development"
+        ENVIRONMENT: "testing"
