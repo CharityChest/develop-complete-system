@@ -7,3 +7,6 @@
 [submodule "cc-backend-root-console"]
 	path = cc-backend-root-console
 	url = git@github.com:CharityChest/cc-backend-root-console.git
+[submodule "oauth2-server"]
+	path = oauth2-server
+	url = git@github.com:willypuzzle/oauth2-server.git
