@@ -7,3 +7,9 @@
 [submodule "cc-backend-root-console"]
 	path = cc-backend-root-console
 	url = git@github.com:CharityChest/cc-backend-root-console.git
+[submodule "oauth2-forward-tool-server"]
+	path = oauth2-forward-tool-server
+	url = git@github.com:willypuzzle/oauth2-forward-tool-server.git
+[submodule "oauth2-forward-tool-client"]
+	path = oauth2-forward-tool-client
+	url = git@github.com:willypuzzle/oauth2-forward-tool-client.git
