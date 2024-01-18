@@ -91,7 +91,33 @@ services:
         REDIS_PORT: 6379
         REDIS_USER: ${REDIS_USERNAME}
         REDIS_PASSWORD: ${REDIS_PASSWORD}
-        REDIS_DB: 0
+        REDIS_DB: ${REDIS_DB}
         AUTH_ENTRIES: ${AUTH_ENTRIES}
         SECRET: ${SECRET}
         ENVIRONMENT: "development"
+  cc-oauth2-forward-tool-server:
+    image: charity-chest/oauth2-forward-tool-server-develop
+    build:
+      context: ../oauth2-forward-tool-server/server
+      dockerfile: ../docker/develop/Dockerfile
+      args:
+        - NODE_VERSION=${OAUTH2_SERVER_NODE_VERSION}
+        - ALPINE_VERSION=${OAUTH2_SERVER_ALPINE_VERSION}
+    ports:
+      - "3001:3000"
+    volumes:
+      - ../oauth2-forward-tool-server/server:/code
+    environment:
+      EMAIL_SERVER_HOST: "mailhog-develop"
+      EMAIL_SERVER_PORT: 1026
+      EMAIL_SERVER_USER: ""
+      EMAIL_SERVER_PASSWORD: ""
+      EMAIL_SERVER_FROM: "\"Charity Chest <develop>\""
+      REDIS_HOST: "cc-redis-develop"
+      REDIS_PORT: 6379
+      REDIS_USER: ${REDIS_USERNAME}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_AUTH_DB: ${REDIS_AUTH_DB}
+      AUTH_ENTRIES: ${AUTH_ENTRIES}
+      SECRET: ${SECRET}
+      ENVIRONMENT: "development"
