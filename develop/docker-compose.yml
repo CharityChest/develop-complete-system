@@ -121,3 +121,23 @@ services:
       AUTH_ENTRIES: ${AUTH_ENTRIES}
       SECRET: ${SECRET}
       ENVIRONMENT: "development"
+  cc-oauth2-forward-tool-client:
+    image: charity-chest/oauth2-forward-tool-client-develop
+    build:
+      context: ../oauth2-forward-tool-client/client
+      dockerfile: ../docker/develop/Dockerfile
+      args:
+        - NODE_VERSION=${OAUTH2_CLIENT_NODE_VERSION}
+        - ALPINE_VERSION=${OAUTH2_CLIENT_ALPINE_VERSION}
+    ports:
+      - "3002:3000"
+    depends_on:
+      - cc-oauth2-forward-tool-server
+    volumes:
+      - ../oauth2-forward-tool-client/client:/code
+    environment:
+      BACKEND_HOST: "cc-oauth2-forward-tool-server"
+      BACKEND_PORT: "3000"
+      BACKEND_PROTOCOL: "http"
+      BACKEND_BASE_URI: "api/v1"
+      ENVIRONMENT: "development"
