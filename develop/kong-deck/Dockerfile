@@ -18,8 +18,6 @@ RUN rm -rf /deck/deck.tar.gz
 
 COPY ./kong.yaml /deck/kong.yaml
 
-RUN cp /deck/kong.yaml /deck/kong.yaml.bak
-
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
