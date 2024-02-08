@@ -27,6 +27,8 @@ volumes:
 networks:
   kong-net:
     external: false
+  services:
+    external: false
 
 services:
   kong-migrations:
@@ -66,6 +68,7 @@ services:
       KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yaml"
     networks:
       - kong-net
+      - services
     ports:
       # The following two environment variables default to an insecure value (0.0.0.0)
       # according to the CIS Security test.
@@ -109,7 +112,23 @@ services:
       - "1337:1337"
     networks:
       - kong-net
+      - services
     restart: on-failure
+  kong-deck:
+    image: charity-chest/deck-develop
+    build:
+      context: ./kong-deck
+      dockerfile: ./Dockerfile
+      args:
+        - LOGIN_FRONTEND_SERVICE_URL=http://cc-oauth2-forward-tool-client:3000/
+        - LOGIN_FRONTEND_ROUTE_HOST=${LOGIN_FRONTEND_ROUTE_HOST}
+    depends_on:
+      - kong
+    networks:
+      - kong-net
+    environment:
+      - KONG_ADMIN_URL=http://kong:8001
+      - WAIT_HOSTS=kong:8001
   postgres-db:
     image: postgres:9.5
     environment:
@@ -139,7 +158,7 @@ services:
     stdin_open: true
     tty: true
     networks:
-      - kong-net
+      - services
     volumes:
       - kong_data:/var/lib/postgresql/data
       - ./postgres-init:/docker-entrypoint-initdb.d
@@ -152,6 +171,8 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - services
   cc-redis-develop:
     image: redis:7.0.12-alpine3.18
     command: redis-server --user ${REDIS_USERNAME} on +@all ~* \>${REDIS_PASSWORD}
@@ -165,6 +186,8 @@ services:
     ports:
       - "1026:1025" # smtp server
       - "8026:8025" # web ui
+    networks:
+      - services
   cc-backend-develop:
     image: charity-chest/cc-backend-develop
     build:
@@ -186,6 +209,8 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       DB_NAME: "cc_backend_develop"
+    networks:
+      - services
   cc-backend-root-console-develop:
     image: charity-chest/cc-backend-root-console-develop
     build:
@@ -206,6 +231,8 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       DB_NAME: "cc_backend_root_console_develop"
+    networks:
+      - services
   cc-root-console:
     image: charity-chest/cc-root-console-develop
     build:
@@ -238,6 +265,8 @@ services:
         REDIS_DB: ${REDIS_DB}
         AUTH_ENTRIES: ${AUTH_ENTRIES}
         SECRET: ${SECRET}
+    networks:
+      - services
   cc-oauth2-forward-tool-server:
     image: charity-chest/oauth2-forward-tool-server-develop
     build:
@@ -264,6 +293,8 @@ services:
       REDIS_AUTH_DB: ${REDIS_AUTH_DB}
       AUTH_ENTRIES: ${AUTH_ENTRIES}
       SECRET: ${SECRET}
+    networks:
+      - services
   cc-oauth2-forward-tool-client:
     image: charity-chest/oauth2-forward-tool-client-develop
     build:
@@ -284,3 +315,5 @@ services:
       BACKEND_PORT: "3000"
       BACKEND_PROTOCOL: "http"
       BACKEND_BASE_URI: "api/v1"
+    networks:
+      - services

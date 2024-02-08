@@ -1,0 +1,22 @@
+_format_version: "3.0"
+services:
+  - connect_timeout: 60000
+    url: __LOGIN_FRONTEND_SERVICE_URL__
+    name: Login-frontend-service
+    read_timeout: 60000
+    retries: 5
+    routes:
+      - hosts:
+          - __LOGIN_FRONTEND_ROUTE_HOST__
+        methods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - PATCH
+        name: login-frontend-service-route
+        preserve_host: true
+        protocols:
+          - http
+        strip_path: false
+    write_timeout: 60000
